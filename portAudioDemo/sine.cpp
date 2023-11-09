@@ -112,8 +112,8 @@ int main(void)
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
     {
-        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
-        printf("%f, ", data.sine[i]);
+        data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. )*0.25;
+        //printf("%f, ", data.sine[i]);
     }
     data.left_phase = data.right_phase = 0;
     
