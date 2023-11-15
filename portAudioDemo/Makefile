@@ -1,9 +1,9 @@
 EXEC = instrument
-
+CXX?= g++
 CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread
 
 $(EXEC): main.cpp
-	g++ -o $@ $^ $(CLIB)
+	$(CXX) -o $@ $^ $(CLIB)
 
 sine: sine.cpp
 	g++ -o $@ $^ $(CLIB)
