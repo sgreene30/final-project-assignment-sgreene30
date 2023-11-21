@@ -19,7 +19,7 @@ def my_callback(channel):
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BOARD) 
     GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(channel, GPIO.RISING, callback=my_callback, bouncetime=200)
+    GPIO.add_event_detect(channel, GPIO.FALLING, callback=my_callback, bouncetime=200)
 
     signal.signal(signal.SIGINT, signal_handler)
     signal.pause()

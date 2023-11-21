@@ -1,9 +1,12 @@
 EXEC = instrument
-CXX?= g++
-CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread
+
+CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/DaisySP/Source
 
 $(EXEC): main.cpp
-	$(CXX) -o $@ $^ $(CLIB)
+	g++ -o $@ $^ $(CLIB)
+
+daisy: daisy.cpp
+	g++ -o $@ ./lib/DaisySP/Source/Synthesis/oscillator.cpp $^ $(CLIB)
 
 sine: sine.cpp
 	g++ -o $@ $^ $(CLIB)
