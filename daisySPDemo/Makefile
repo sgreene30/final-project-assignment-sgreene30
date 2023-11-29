@@ -90,7 +90,10 @@ CXX ?= g++
 CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/
 
 $(EXEC): drum.cpp 
-	$(CXX) -o $@ $^ $(CPP_SOURCES) $(CLIB) 
+	/home/sgreene30/final_project_aesd/buildroot/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-g++ -o $@ $^ $(CPP_SOURCES) $(CLIB) 
+
+hello: hello_world.cpp
+	$(CXX) -o $@ $^
 
 install-deps:
 	
