@@ -1,4 +1,4 @@
-DAISYSP_SOURCE_DIR = lib/DaisySP/Source
+DAISYSP_SOURCE_DIR = lib/daisy/Source
 
 CONTROL_MOD_DIR = Control
 CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/adenv.cpp
@@ -87,10 +87,10 @@ UTILITY_MOD_DIR = Utility
 EXEC = drum
 CXX ?= g++
 
-CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/DaisySP/Source -I./lib/DaisySP/Source/Utility/
+CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/
 
 $(EXEC): drum.cpp 
-	g++ -o $@ $^ $(CPP_SOURCES) $(CLIB) $(CXX)
+	$(CXX) -o $@ $^ $(CPP_SOURCES) $(CLIB) 
 
 install-deps:
 	
