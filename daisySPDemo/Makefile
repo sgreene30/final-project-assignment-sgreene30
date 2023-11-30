@@ -2,7 +2,7 @@ DAISYSP_SOURCE_DIR = lib/daisy/Source
 
 CONTROL_MOD_DIR = Control
 CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/adenv.cpp
-CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/adsr.cpp
+#CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/adsr.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/line.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/phasor.cpp
 
@@ -85,7 +85,8 @@ UTILITY_MOD_DIR = Utility
 
 
 EXEC = drum
-CXX ?= g++
+CROSS_COMPILE ?= /home/sgreene30/final_project_aesd/buildroot/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-
+CXX ?= $(CROSS_COMPILE)g++
 
 CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/
 
@@ -93,6 +94,7 @@ $(EXEC): drum.cpp
 	/home/sgreene30/final_project_aesd/buildroot/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-g++ -o $@ $^ $(CPP_SOURCES) $(CLIB) 
 
 hello: hello_world.cpp
+	echo $(CXX)
 	$(CXX) -o $@ $^
 
 install-deps:
