@@ -7,15 +7,14 @@
 
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 128
-#define SLEEP_SEC 1
+#define SLEEP_SEC 0.5
 #define LATENCY 0.05
 
 using namespace daisysp;
 
-Oscillator osc;
-AdEnv pitch_env;
+WhiteNoise noise;
 AdEnv amplitude_env;
-
+//Svf filt;
 
 typedef struct
 {
@@ -56,11 +55,10 @@ static int patestCallback(
     paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
     unsigned long i;
-    float osc_out, amp_out, pitch_out;
+    float amp_out, hat_out;
 
     if(!data->triggered)
     {
-        pitch_env.Trigger();
         amplitude_env.Trigger();
         data->triggered = true;
     }
@@ -68,23 +66,15 @@ static int patestCallback(
     for(i=0; i<framesPerBuffer; i++)
     {
         amp_out = amplitude_env.Process();
-        pitch_out = pitch_env.Process();
+        hat_out = noise.Process();
+        //filt.Process(hat_out);
 
-        osc.SetAmp(amp_out);
-        osc.SetFreq(pitch_out);
-        
-        osc_out = osc.Process();
+        hat_out *= amp_out;
 
         //set left and right
-        *out++ = osc_out;
-        *out++ = osc_out;
+        *out++ = hat_out;
+        *out++ = hat_out;
     }
-
-    /*if(amplitude_env.GetCurrentSegment() == ADENV_SEG_IDLE)
-    {
-        printf("idle");
-        closePA(data->stream);
-    }*/
 
     return 0;
 }
@@ -97,30 +87,26 @@ int main()
     paTestData data;
     PaStreamParameters outputParameters;
 
-    data.triggered = false;
-
     float sample_rate_f = (float)SAMPLE_RATE;
 
-    //initialize oscillator
-    osc.Init(sample_rate_f);
-    osc.SetWaveform(osc.WAVE_POLYBLEP_TRI);
-    osc.SetAmp(0.5f);
-    osc.SetFreq(1000);
-
-    //initialize pitch_env
-    pitch_env.Init(sample_rate_f);
-    pitch_env.SetTime(ADENV_SEG_ATTACK, 0.002);
-    pitch_env.SetTime(ADENV_SEG_DECAY, 0.02);
-    pitch_env.SetMax(400);
-    pitch_env.SetMin(40);
+    data.triggered = false;
 
     //initialize amplitude_env
     amplitude_env.Init(sample_rate_f);
     amplitude_env.SetTime(ADENV_SEG_ATTACK, 0.002);
-    amplitude_env.SetTime(ADENV_SEG_DECAY, 0.5);
+    amplitude_env.SetTime(ADENV_SEG_DECAY, 0.015);
     amplitude_env.SetMax(1);
     amplitude_env.SetMin(0);
     //amplitude_env.SetCurve(-1);
+
+    //initialize noise
+    noise.Init();
+
+    //initialize filter
+    /*filt.Init(sample_rate_f);
+    filt.SetFreq(5000.0);
+    filt.SetRes(0.0);
+    filt.SetDrive(0.5);*/
 
     //init portaudio
     err = Pa_Initialize();

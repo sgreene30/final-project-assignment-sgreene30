@@ -1,9 +1,12 @@
 import RPi.GPIO as GPIO
 import signal
 import sys
+import time
+import subprocess
 
 
 channel = 11
+trig = False
 
 def signal_handler(sig, frame):
     GPIO.cleanup()
@@ -11,6 +14,12 @@ def signal_handler(sig, frame):
 
 
 def my_callback(channel):
+    if trig == False:
+        #print("edge")
+        trig = True
+        subprocess.call(["./drum"])
+        
+        
     if not GPIO.input(channel):
         print('button pressed')
     else:

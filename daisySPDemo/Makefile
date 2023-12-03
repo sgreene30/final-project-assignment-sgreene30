@@ -45,7 +45,7 @@ CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(CONTROL_MOD_DIR)/adenv.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(FILTER_MOD_DIR)/tone.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(FILTER_MOD_DIR)/soap.cpp
 
-#NOISE_MOD_DIR = Noise
+NOISE_MOD_DIR = Noise
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(NOISE_MOD_DIR)/clockednoise.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(NOISE_MOD_DIR)/grainlet.cpp
 #CPP_SOURCES += $(DAISYSP_SOURCE_DIR)/$(NOISE_MOD_DIR)/particle.cpp 
@@ -84,18 +84,25 @@ UTILITY_MOD_DIR = Utility
 #smooth_random
 
 
-EXEC = drum
+
+CLIB_LOCAL = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/
+CLIB_TARGET = -I./lib/portaudio/include -lrt -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/ -L./lib -lportaudio -lasound -ljack
+
+
+CLIB = $(CLIB_TARGET)
 CROSS_COMPILE ?= /home/sgreene30/final_project_aesd/buildroot/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-
-CXX ?= $(CROSS_COMPILE)g++
+CXX = $(CROSS_COMPILE)g++
 
-CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread -I./lib/daisy/Source -I./lib/daisy/Source/Utility/
+#CLIB = $(CLIB_LOCAL)
 
-$(EXEC): drum.cpp 
-	/home/sgreene30/final_project_aesd/buildroot/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-g++ -o $@ $^ $(CPP_SOURCES) $(CLIB) 
+drum: drum.cpp
+	$(CXX) -o $@ $^ $(CPP_SOURCES) $(CLIB)
 
-hello: hello_world.cpp
-	echo $(CXX)
-	$(CXX) -o $@ $^
+hat: hat.cpp
+	$(CXX) -o $@ $^ $(CPP_SOURCES) $(CLIB)
+
+device_ls: device_ls.cpp
+	$(CXX) -o $@ $^ $(CLIB) 
 
 install-deps:
 	
