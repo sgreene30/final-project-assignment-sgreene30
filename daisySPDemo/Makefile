@@ -109,5 +109,8 @@ install-deps:
 	mkdir -p lib
 
 	curl https://files.portaudio.com/archives/pa_stable_v190700_20210406.tgz | tar -zx -C lib
+.PHONY: install-deps
+
+make_deps:
 	cd lib/portaudio && ./configure && $(MAKE) -j
 .PHONY: install-deps
